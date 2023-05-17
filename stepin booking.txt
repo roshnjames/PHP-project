@@ -1,0 +1,130 @@
+<?php 
+session_start();
+/*if(!isset($_SESSION["email"]))
+{
+	$_SESSION["flag"]=1;
+    echo "<script type='text/javascript'> alert('Please Login to proceed further!');
+	window.location = 'http://localhost/photoprowess/login.php';
+	</script>";
+}
+else
+{*/
+$conn = mysqli_connect("localhost","root","","railway");
+if(!$conn){  
+	echo "<script type='text/javascript'>alert('Database failed');</script>";
+  	die('Could not connect: '.mysqli_connect_error());  
+}
+if (isset($_POST['submit']))
+{
+	
+if($result2=$conn->query("SELECT MAX(pnrno) FROM pnr;"))
+{
+	
+	if($row2= mysqli_fetch_array($result2)){
+	$pnrno=$row2[0];
+    $pnrno=$pnrno+1;
+	}
+$count=$_POST['nump'];
+}
+/*$trains=$_POST['trains'];
+$sql = "SELECT tno FROM trains WHERE tname = '$trains'";
+if($result =$conn->query($sql))
+{	
+$row = mysqli_fetch_assoc($result);
+$no=$row['tno'];
+}*/
+$email=$_SESSION["email"];
+
+$query="INSERT INTO booking VALUES(".$_POST['trains'].",'$email',$pnrno);";
+
+	if($conn->query($query))
+{  
+   if( $conn->query("INSERT INTO pnr VALUES(".$_POST['trains'].",'$email',$pnrno,$count);"))
+   {
+	$message = "Success!    Your PNR No. :".$pnrno;
+   }
+}
+	else {
+		$message=" failed";
+	}
+	echo "<script type='text/javascript'>alert('$message');</script>";
+}
+
+?>
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Book a ticket</title>
+	<style type="text/css">
+		#booktkt	{
+			margin:auto;
+			margin-top: 40px;
+			width: 500px;
+			height: 310px;
+			padding: auto;
+			padding-top: 50px;
+			padding-left: 50px;
+			background-color: gold;
+			border-radius: 25px;
+		}
+		html { 
+		  background: url(img/bg7.jpg) no-repeat center center fixed; 
+		  -webkit-background-size: cover;
+		  -moz-background-size: cover;
+		  -o-background-size: cover;
+		  background-size: cover;
+		}
+		#journeytext	{
+			color: white;
+			font-size: 28px;
+			font-family:"Comic Sans MS", cursive, sans-serif;
+		}
+		#trains	{
+			margin-left: 90px;
+			font-size: 15px;
+		}
+		#submit	{
+			margin-left: 150px;
+			margin-bottom: 40px;
+			margin-top: 30px
+		}
+	</style>
+	<script type="text/javascript">
+		function validate()	{
+			
+			var trains=document.getElementById("trains");
+			if(trains.selectedIndex==0)
+			{
+				alert("Please select your train");
+				trains.focus();
+				return false;		
+			}
+		}
+	</script>
+</head>
+<body>
+	<div id="booktkt">
+	<h1 align="center" id="journeytext">Choose your journey!</h1><br/><br/>
+	<form method="post" align="left" name="journeyform" onsubmit="return validate()">
+	<input type="text" id="nump" name="nump" size="30" maxlength="30" placeholder="Enter number of passengers"><br><br>
+	<?php
+	  $q="SELECT * FROM TRAINS";
+	  if($res=$conn->query($q)){
+		  echo "<select id='trains' name='trains' required>";
+			echo"<option selected disabled>-----------------Select train here--------------------</option>";
+		  while($row=$res->fetch_assoc()){
+		
+			echo"<option value='".$row['tno']."' >".$row['tname']."</option>";
+			
+		
+		  }
+		  echo"</select>";
+	  }
+		?>
+		<br/><br/>
+		<input type="submit" name="submit" id="submit" class="button" />
+	</form>
+		<a href="index.php" >HOME</a>
+	</div>
+	</body>
+	</html>

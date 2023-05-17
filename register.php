@@ -1,11 +1,5 @@
-<?php
-session_start();
-if(!isset($_SESSION['start']))
-	header("location:index.php");
-?>
 <html>
 <head><title>Registration</title>
-<LINK REL="STYLESHEET" HREF="STYLE.CSS">
 <script type="text/javascript">
 	function validate()	{
 		var EmailId=document.getElementById("email");
@@ -18,66 +12,6 @@ if(!isset($_SESSION['start']))
     	var dotpos = EmailId.value.lastIndexOf(".");
 		var pw=document.getElementById("pw");
 		var cpw=document.getElementById("cpw");
-		var iChars = "!`@#$%^&*()+=-[]\\\';,./{}|\":<>?~_";
-        var mChars = "!`#$%^&*()+=-[]\\\';,/{}|\":<>?~_"; 		
-		var data = document.getElementById("fname").value;
-
-                for (var i = 0; i < data.length; i++)
-
-                {      
-
-                    if (iChars.indexOf(data.charAt(i)) != -1)
-
-                    {    
-
-                    alert ("First name has special characters. \nThese are not allowed.");
-
-                    document.getElementById("fname").value = "";
-
-                    return false; 
-
-                    } 
-
-                }
-				var data = document.getElementById("lname").value;
-
-                for (var i = 0; i < data.length; i++)
-
-                {      
-
-                    if (iChars.indexOf(data.charAt(i)) != -1)
-
-                    {    
-
-                    alert ("Last name has special characters. \nThese are not allowed.");
-
-                    document.getElementById("lname").value = "";
-
-                    return false; 
-
-                    } 
-
-                }   
-
-                var data = document.getElementById("email").value;
-
-                for (var i = 0; i < data.length; i++)
-
-                {      
-
-                    if (mChars.indexOf(data.charAt(i)) != -1)
-
-                    {    
-
-                    alert ("Email has wrong Characters");
-
-                    document.getElementById("email").value = "";
-
-                    return false; 
-
-                    } 
-
-                }
 		if (atpos<1 || dotpos<atpos+2 || dotpos+2>=EmailId.value.length) 
 		{
         	alert("Enter valid email-ID");
@@ -102,18 +36,6 @@ if(!isset($_SESSION['start']))
 	
 			return false;
 		}
-		if(!isNaN(fname.value))
-		{
-			alert("Numbers are not allowed for First name.");
-			fname.focus();
-			return false;
-		}
-		if(!isNaN(lname.value))
-		{
-			alert("Numbers are not allowed for Last name.");
-			fname.focus();
-			return false;
-		}
 		if(aged.value<=1)
 		{
 			alert("please select your correct age");
@@ -121,7 +43,7 @@ if(!isset($_SESSION['start']))
 		}
 		if(isNaN(aged.value))
 		{
-			alert("please enter a number as age.");
+			alert("please enter number as age.");
 			aged.focus();
 			return false;
 		}
@@ -138,7 +60,7 @@ if(!isset($_SESSION['start']))
 body {
 	background: #f3e0e2;
 	display: flex;
-	background-color:LightGreen;
+	background_color:yellow;
 	justify-content: center;
 	align-items: center;
 	flex-direction: column;
@@ -146,26 +68,10 @@ body {
 	height: 100vh;
 	margin: -20px 0 50px;
 }
-		#pnr{
-			font-size: 20px;
-			background-color: chartreuse;
-			width: 700px;
-			height: 560px;
-			margin: auto;
-			border-radius: 25px;
-			border: 2px solid blue; 
-			margin: auto;
-  			position: absolute;
-  			left: 0; 
-  			right: 0;
-  			padding-top: 25px;
-  			padding-bottom:20px;
-  			margin-top: 80px;
-		}
 </style>
 </head>
 <body>
-<div align="center" id="pnr">
+<div align="center">
 <?php
  ini_set('display_errors', 'Off');
 if($_SERVER["REQUEST_METHOD"]=="POST")
@@ -192,13 +98,6 @@ if($gender==""){
 	echo "<script type='text/javascript'>alert('Please choose Gender');</script>";
 }
 else{
-	$sqle="SELECT * FROM passengers WHERE email='$email';";
-	$res=mysqli_query($conn,$sqle);
-	if($res->num_rows>0)
-	{
-		echo "<script type='text/javascript'>alert('Duplicate Email, Register Using Another Email Id');</script>";
-	}
-	else{
 if($pw==$cpw)
 {
 $sql = "INSERT INTO passengers (p_fname, p_lname, p_age, p_contact, p_gender, email, password) VALUES ('$fname', '$lname', '$age', '$mob', '$gender', '$email', '$pw');";
@@ -206,7 +105,7 @@ $sql = "INSERT INTO passengers (p_fname, p_lname, p_age, p_contact, p_gender, em
 {
 	?>
 	<script type="text/javascript">
-	alert("Registration Successfull");
+	alert("Registration successfull");
 	</script>
 	<?php
 }
@@ -227,13 +126,13 @@ else{
 	</script>
 	<?php
 }
-}}}
+}}
 ?>
 
 
 <FORM name="register" method="post" action="register.php" onsubmit="return validate()">
-<TABLE>
-<CAPTION><H1><b>Register Here!</b></H1></CAPTION>
+<TABLE border="3">
+<CAPTION><br/><H1><b>Enter your details</b></H1></CAPTION>
 <tr></tr><tr></tr><tr></tr><tr></tr><tr></tr>
 <TR>
 <TD>First name:</TD>
@@ -255,9 +154,9 @@ else{
 <TR>
 <TD>Gender:</TD>
 <TD>&nbsp;&nbsp;
-<INPUT type="radio" name="gender" value="Male" align="center" id="gender"><b><i>Male</i></b>
+<INPUT type="radio" name="gender" value="Male" align="center" id="gender">Male
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<input type="radio" name="gender" value="Female" align="center" id="gender"><b><i>Female</i></b>
+<input type="radio" name="gender" value="Female" align="center" id="gender">Female
 </TD>
 </TR><tr></tr><tr></tr>
 <TR>
@@ -271,8 +170,8 @@ else{
 <TR>
 <TD>Confirm Password:</TD>
 <TD><INPUT type="PASSWORD" name="cpw" size="30" id="cpw"></TD>
-</TR>
-<tr></tr>
+</TR><tr></tr><tr></tr><tr></tr><tr></tr>
+<tr></tr><tr></tr><tr></tr>
 </TABLE>
 <P><INPUT TYPE="Submit" value="Submit" name="submit" id="submit" class="button" onclick="if(!this.form.tc.checked){alert('You must agree to the terms first.');return false}">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
 <INPUT TYPE="Reset" value="Reset" id="reset" class="button"></P></FORM><br/>
@@ -289,5 +188,3 @@ Already have an account with us?<BR/>
 
 
 
-
-	
